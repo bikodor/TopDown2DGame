@@ -7,7 +7,7 @@ var gold: int
 
 
 var save_data: Dictionary = {
-	"meta_upgrade_currency" : 5000,
+	"meta_upgrade_currency" : 0,
 	"meta_record_time": 0,
 	"meta_upgrades": {}
 }
