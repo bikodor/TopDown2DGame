@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MetaUpgrade" load_steps=2 format=3 uid="uid://c7ygy7yvdwcjk"]
+
+[ext_resource type="Script" uid="uid://baovijqsq6ck4" path="res://resources/meta_upgrades/meta_upgrades.gd" id="1_mfafd"]
+
+[resource]
+script = ExtResource("1_mfafd")
+id = "move_speed"
+max_quantity = 3
+name = "Move Speed"
+description = "Increases player movement speed by 10%"

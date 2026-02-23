@@ -1,0 +1,116 @@
+[gd_scene load_steps=16 format=3 uid="uid://b8y2uebjih13l"]
+
+[ext_resource type="Script" uid="uid://dppmxv078rwln" path="res://scene/components/death_component.gd" id="1_m7agx"]
+[ext_resource type="Texture2D" uid="uid://bv8wido7yi86r" path="res://scene/game_objects/mushroom/SmallMushroom_Idle_1.png" id="1_xdsv3"]
+[ext_resource type="PackedScene" uid="uid://2bvrljspkhk0" path="res://scene/components/hit_sound_component.tscn" id="3_mh4ll"]
+[ext_resource type="AudioStream" uid="uid://wxyg4xpj8mjf" path="res://assets/audio/death/hurt1.MP3" id="4_c0cku"]
+[ext_resource type="AudioStream" uid="uid://oe8go2nsnot6" path="res://assets/audio/death/hurt2.MP3" id="5_kpbi6"]
+[ext_resource type="AudioStream" uid="uid://cj7pjkl5dw3tw" path="res://assets/audio/death/hurt3.MP3" id="6_kjdq5"]
+[ext_resource type="AudioStream" uid="uid://cfrjp1p7vx411" path="res://assets/audio/death/hurt4.MP3" id="7_8msh7"]
+[ext_resource type="AudioStream" uid="uid://w6uokso3ccr0" path="res://assets/audio/death/hurt5.MP3" id="8_361iy"]
+
+[sub_resource type="Animation" id="Animation_m7agx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteOffset/GPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_xdsv3"]
+resource_name = "death"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteOffset/GPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.8),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mh4ll"]
+_data = {
+&"RESET": SubResource("Animation_m7agx"),
+&"death": SubResource("Animation_xdsv3")
+}
+
+[sub_resource type="Curve" id="Curve_xdsv3"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.69375, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_m7agx"]
+curve = SubResource("Curve_xdsv3")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4jamh"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 15.0
+initial_velocity_min = 85.0
+initial_velocity_max = 174.0
+angular_velocity_min = -112.000015
+angular_velocity_max = 111.999985
+gravity = Vector3(0, 500, 0)
+alpha_curve = SubResource("CurveTexture_m7agx")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_3utqx"]
+streams_count = 5
+stream_0/stream = ExtResource("4_c0cku")
+stream_1/stream = ExtResource("5_kpbi6")
+stream_2/stream = ExtResource("6_kjdq5")
+stream_3/stream = ExtResource("7_8msh7")
+stream_4/stream = ExtResource("8_361iy")
+
+[node name="DeathComponent" type="Node2D"]
+script = ExtResource("1_m7agx")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_mh4ll")
+}
+autoplay = "death"
+
+[node name="HitSoundComponent" parent="." instance=ExtResource("3_mh4ll")]
+
+[node name="SpriteOffset" type="Node2D" parent="."]
+position = Vector2(0, -16)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="SpriteOffset"]
+unique_name_in_owner = true
+emitting = false
+amount = 1
+texture = ExtResource("1_xdsv3")
+lifetime = 0.8
+one_shot = true
+fixed_fps = 0
+interpolate = false
+process_material = SubResource("ParticleProcessMaterial_4jamh")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_3utqx")
+bus = &"SFX"
